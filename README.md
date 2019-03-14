@@ -55,8 +55,6 @@ The usage is very easy. You only need 2 Parameters to fill in order to work prop
 
   <!-- Scripts -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <!-- OR -->
-  <!-- <script src="./assets/js/jquery-3.3.1.min.js"></script> -->
 
   <title data-translation="title"></title>
 </head>
@@ -68,8 +66,38 @@ The usage is very easy. You only need 2 Parameters to fill in order to work prop
 
   <!-- Make sure to implement this file on the very bottom of the body -->
   <script src="https://cdn.moutinho.org/lightweight-jquery-translator/@latest/lwcTranslator.min.js"></script>
-  <!-- OR -->
-  <!-- <script src="./assets/js/lwcTranslator.min.js"></script> -->
+  <script>
+
+    // Normal use
+    $('html').lwcTranslator({
+      languageSettingsFile: 'https://path/to/languages.json',
+      languageFolderPath: 'https://path/to/languages/folder/'
+    });
+
+    // Customized use
+    /* Default Values: */
+    $('html').lwcTranslator({
+      languageSettingsFile: 'https://path/to/languages.json', /* (REQUIRED) settings file path */
+      languageFolderPath: 'https://path/to/languages/folder/', /* (REQUIRED) languages folder path */
+      async: true, /* Load files asynchronous */
+      attributes: {
+        textTranslation: 'data-translation', /*text translation attribute*/
+        attrTranslation: 'data-translation-attr' /*attribute translation attribute*/
+      },
+      defaultLanguage: 'en-UK', /*load default language (useable with saved language in local storage or else)*/
+      paragraphSupport: true, /*Break \n line breaks inside <p></p> tags*/
+      onLanguageSettingsLoaded: function(settings) { /*after load of languages settings file*/
+        console.log('settings', settings);
+      },
+      onLanguageLoaded: function(language) { /* after load of every language*/
+        console.log('language', language);
+      },
+      onLanguagesLoaded: function(languages) { /* after load of all languages*/
+        console.log('languages', languages);
+      }
+    });
+
+  </script>
 </body>
 </html>
 ```
