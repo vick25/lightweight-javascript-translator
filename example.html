@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html data-translation="lang" data-translation-attr="lang">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <title data-translation="title"></title>
+</head>
+<body>
+  
+  <script src="dist/lwcTranslator.js"></script>
+  <script>
+    // $('html').lwcTranslator({
+    //   languageSettingsFile: 'http://localhost/plugins/lightweight-jquery-translator/assets/config/languages.json',
+    //   languageFolderPath: 'http://localhost/plugins/lightweight-jquery-translator/assets/config/languages/',
+    //   async: true,
+    //   attributes: {
+    //     textTranslation: 'data-translation',
+    //     attrTranslation: 'data-translation-attr'
+    //   },
+    //   defaultLanguage: 'en-UK',
+    //   paragraphSupport: true,
+    //   onLanguageSettingsLoaded: function(settings) {
+    //     console.log('settings', settings);
+    //   },
+    //   onLanguageLoaded: function(language) {
+    //     console.log('language', language);
+    //   },
+    //   onLanguagesLoaded: function(languages) {
+    //     console.log('languages', languages);
+    //   }
+    // });
+
+    
+    $('html').lwcTranslator({
+      languageSettingsFile: 'http://localhost/plugins/lightweight-jquery-translator/assets/config/languages.json',
+      languageFolderPath: 'http://localhost/plugins/lightweight-jquery-translator/assets/config/languages/'
+    });
+  </script>
+</body>
+</html>
