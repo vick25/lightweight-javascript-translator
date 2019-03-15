@@ -38,6 +38,10 @@ Make sure to implement JQuery first before the Lightweight JQuery Translator lib
 </html>
 ```
 
+## Demo
+
+[Demo](https://cdn.moutinho.org/lightweight-jquery-translator/example.html)
+
 ## Usage
 
 The usage is very easy. You only need 2 Parameters to fill in order to work properly.
@@ -132,6 +136,13 @@ The usage is very easy. You only need 2 Parameters to fill in order to work prop
 }
 ```
 
+## Supported Browsers
+
+* Chrome
+* Firefox
+* Edge
+* Internet Explorer
+
 ## Changelog
 
 ### 1.0.0
@@ -140,4 +151,4 @@ Initial Release of LwcTranslator
 
 ## License
 
-Lightweight JQuery Translator is licensed unter the [MIT License]([https://www.google.com](https://github.com/codingsamuel/lightweight-jquery-translator/blob/master/LICENSE) "MIT LICENSE")
+Lightweight JQuery Translator is licensed unter the [MIT License](https://github.com/codingsamuel/lightweight-jquery-translator/blob/master/LICENSE) "MIT LICENSE")

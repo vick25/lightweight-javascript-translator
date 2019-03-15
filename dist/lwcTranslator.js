@@ -4,6 +4,18 @@
  * @version 1.0.0
  * @copyright codingsamuel 2019
  */
+if (!Object.entries) {
+  Object.entries = function( obj ){
+    var ownProps = Object.keys( obj ),
+        i = ownProps.length,
+        resArray = new Array(i); // preallocate the Array
+    while (i--)
+      resArray[i] = [ownProps[i], obj[ownProps[i]]];
+
+    return resArray;
+  };
+}
+
 class LwcTranslator {
 
   /**
@@ -145,7 +157,7 @@ class LwcTranslator {
         if (listeners.onSettingsLoad) listeners.onSettingsLoad.call(this, json);
       },
       error: (e) => {
-        throw new Error("Failed to load " + this.languageSettingsFile + ".json");
+        throw new Error("Failed to load " + this.languageSettingsFile);
       }
     });
   }

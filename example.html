@@ -6,14 +6,28 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <title data-translation="title"></title>
+
+  <style>
+    
+  html, body {
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif
+  }
+
+  </style>
 </head>
 <body>
   
-  <script src="dist/lwcTranslator.js"></script>
+  <h1>This Page content is translated with the LwcTranslator.</h1>
+
+  <header>
+    <h1 data-translation="header.title"></h1>
+  </header>
+
+  <script src="dist/lwcTranslator.min.js"></script>
   <script>
     // $('html').lwcTranslator({
-    //   languageSettingsFile: 'http://localhost/plugins/lightweight-jquery-translator/assets/config/languages.json',
-    //   languageFolderPath: 'http://localhost/plugins/lightweight-jquery-translator/assets/config/languages/',
+    //   languageSettingsFile: 'https://cdn.moutinho.org/lightweight-jquery-translator/assets/config/languages.json',
+    //   languageFolderPath: 'https://cdn.moutinho.org/lightweight-jquery-translator/assets/config/languages/,
     //   async: true,
     //   attributes: {
     //     textTranslation: 'data-translation',
@@ -31,11 +45,10 @@
     //     console.log('languages', languages);
     //   }
     // });
-
     
     $('html').lwcTranslator({
-      languageSettingsFile: 'http://localhost/plugins/lightweight-jquery-translator/assets/config/languages.json',
-      languageFolderPath: 'http://localhost/plugins/lightweight-jquery-translator/assets/config/languages/'
+      languageSettingsFile: 'https://cdn.moutinho.org/lightweight-jquery-translator/assets/config/languages.json',
+      languageFolderPath: 'https://cdn.moutinho.org/lightweight-jquery-translator/assets/config/languages/'
     });
   </script>
 </body>
