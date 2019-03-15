@@ -145,9 +145,14 @@ The usage is very easy. You only need 2 Parameters to fill in order to work prop
 
 ## Changelog
 
+### 1.0.1
+
+* Bug Fixes
+* Working on Internet Exlorer
+
 ### 1.0.0
 
-Initial Release of LwcTranslator
+* Initial Release of LwcTranslator
 
 ## License
 
