@@ -3,5 +3,10 @@
     "name": "English",
     "filename": "en-UK",
     "icon": "gb.svg"
+  },
+  {
+    "name": "Deutsch",
+    "filename": "de-DE",
+    "icon": "de.svg"
   }
 ]

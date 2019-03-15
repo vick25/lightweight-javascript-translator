@@ -40,7 +40,7 @@ Make sure to implement JQuery first before the Lightweight JQuery Translator lib
 
 ## Demo
 
-[Demo](https://cdn.moutinho.org/lightweight-jquery-translator/example.html)
+[See how this library works](https://cdn.moutinho.org/lightweight-jquery-translator/example.html)
 
 ## Usage
 

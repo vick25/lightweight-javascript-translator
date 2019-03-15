@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="assets/css/prism.min.css">
   <title data-translation="title"></title>
 
   <style>
@@ -23,33 +24,91 @@
     <h1 data-translation="header.title"></h1>
   </header>
 
-  <script src="dist/lwcTranslator.min.js"></script>
-  <script>
-    // $('html').lwcTranslator({
-    //   languageSettingsFile: 'https://cdn.moutinho.org/lightweight-jquery-translator/assets/config/languages.json',
-    //   languageFolderPath: 'https://cdn.moutinho.org/lightweight-jquery-translator/assets/config/languages/,
-    //   async: true,
-    //   attributes: {
-    //     textTranslation: 'data-translation',
-    //     attrTranslation: 'data-translation-attr'
-    //   },
-    //   defaultLanguage: 'en-UK',
-    //   paragraphSupport: true,
-    //   onLanguageSettingsLoaded: function(settings) {
-    //     console.log('settings', settings);
-    //   },
-    //   onLanguageLoaded: function(language) {
-    //     console.log('language', language);
-    //   },
-    //   onLanguagesLoaded: function(languages) {
-    //     console.log('languages', languages);
-    //   }
-    // });
+  <select name="" id=""></select>
+
+  <h2>Example usage of LwcTranslator</h2>
+<pre style="max-height: 400px;">
+<code class="language-html">
+&lt;!DOCTYPE html&gt;
+&lt;html data-translation=&quot;lang&quot; data-translation-attr=&quot;lang&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+  &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;ie=edge&quot;&gt;
+  &lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js&quot;&gt;&lt;/script&gt;
+  &lt;title data-translation=&quot;title&quot;&gt;&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  
+  &lt;h1&gt;This Page content is translated with the LwcTranslator.&lt;/h1&gt;
+
+  &lt;header&gt;
+    &lt;h1 data-translation=&quot;header.title&quot;&gt;&lt;/h1&gt;
+  &lt;/header&gt;
+
+  &lt;select name=&quot;&quot; id=&quot;&quot;&gt;&lt;/select&gt;
+
+  &lt;h2&gt;Example usage of LwcTranslator&lt;/h2&gt;
+
+  &lt;script src=&quot;dist/lwcTranslator.min.js&quot;&gt;&lt;/script&gt;
+  &lt;script&gt;
+
+    if (!window.localStorage['defaultLanguage'])
+      window.localStorage['defaultLanguage'] = 'en-UK';
     
     $('html').lwcTranslator({
       languageSettingsFile: 'https://cdn.moutinho.org/lightweight-jquery-translator/assets/config/languages.json',
-      languageFolderPath: 'https://cdn.moutinho.org/lightweight-jquery-translator/assets/config/languages/'
+      languageFolderPath: 'https://cdn.moutinho.org/lightweight-jquery-translator/assets/config/languages/',
+      defaultLanguage: window.localStorage['defaultLanguage'],
+      onLanguageSettingsLoaded: function(settings) {
+        for (let i = 0; i &lt; settings.length; i++) {
+          if (settings[i].filename == window.localStorage['defaultLanguage'])
+            $('select').append('&lt;option value=&quot;'+settings[i].filename+'&quot; selected&gt;'+settings[i].name+'&lt;/option&gt;');
+          else
+            $('select').append('&lt;option value=&quot;'+settings[i].filename+'&quot;&gt;'+settings[i].name+'&lt;/option&gt;');          
+        }
+
+        $('select').change(function(){
+          window.localStorage['defaultLanguage'] = $(this).val();
+          window.location.reload();
+        });
+      }
     });
+
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code>
+</pre>
+
+  <script src="dist/lwcTranslator.min.js"></script>
+  <script>
+
+    if (!window.localStorage['defaultLanguage'])
+      window.localStorage['defaultLanguage'] = 'en-UK';
+
+    $('body').prepend('<p>Your Default Language is ' + window.localStorage['defaultLanguage'] + "</p>");  
+    
+    $('html').lwcTranslator({
+      languageSettingsFile: 'https://cdn.moutinho.org/lightweight-jquery-translator/assets/config/languages.json',
+      languageFolderPath: 'https://cdn.moutinho.org/lightweight-jquery-translator/assets/config/languages/',
+      defaultLanguage: window.localStorage['defaultLanguage'],
+      onLanguageSettingsLoaded: function(settings) {
+        for (let i = 0; i < settings.length; i++) {
+          if (settings[i].filename == window.localStorage['defaultLanguage'])
+            $('select').append('<option value="'+settings[i].filename+'" selected>'+settings[i].name+'</option>');
+          else
+            $('select').append('<option value="'+settings[i].filename+'">'+settings[i].name+'</option>');          
+        }
+
+        $('select').change(function(){
+          window.localStorage['defaultLanguage'] = $(this).val();
+          window.location.reload();
+        });
+      }
+    });
+
   </script>
+  <script src="assets/js/prism.min.js"></script>
 </body>
 </html>
