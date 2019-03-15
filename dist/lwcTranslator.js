@@ -1,7 +1,7 @@
 /**
  * @author codingsamuel
  * @license MIT
- * @version 1.0.1
+ * @version 1.0.2
  * @copyright codingsamuel 2019
  */
 if (!Object.entries) {
@@ -52,7 +52,7 @@ class LwcTranslator {
         replacement = replacement[obj];
     });
     
-    if (settings.paragraphSupport && (replacement instanceof String)){
+    if (settings.paragraphSupport && (typeof replacement == "string")){
       let breaks = replacement.split(/\n/g);
       if (breaks.length > 1) {
         for (let j = 0; j < breaks.length; j++)
@@ -173,6 +173,7 @@ class LwcTranslator {
  * @param {Object} settings.attributes
  * @param {String} settings.attributes.textTranslation
  * @param {String} settings.attributes.attrTranslation
+ * @param {Boolean} settings.paragraphSupport
  * @param {Function} settings.onLanguageSettingsLoaded
  * @param {Function} settings.onLanguageLoaded
  * @param {Function} settings.onLanguagesLoaded
@@ -186,6 +187,7 @@ $.fn.lwcTranslator = function(settings) {
     if (!settings.languageSettingsFile || !settings.languageFolderPath || settings.languageSettingsFile === '' || settings.languageFolderPath === '') {
       throw new Error("Path cannot be empty.");
     } else {
+      settings.paragraphSupport = settings.paragraphSupport || true;
       translator.load(
         settings.async || true, {
           onSettingsLoad: settings.onLanguageSettingsLoaded,

@@ -4,7 +4,7 @@ A lightweight jquery translator with customizable settings and callbacks.
 
 ## Version
 
-The latest version is 1.0.1
+The latest version is 1.0.2
 
 ## Implementation
 
@@ -145,6 +145,10 @@ The usage is very easy. You only need 2 Parameters to fill in order to work prop
 
 ## Changelog
 
+### 1.0.2
+
+* Fix paragraph support
+
 ### 1.0.1
 
 * Bug Fixes
@@ -156,4 +160,4 @@ The usage is very easy. You only need 2 Parameters to fill in order to work prop
 
 ## License
 
-Lightweight JQuery Translator is licensed unter the [MIT License](https://github.com/codingsamuel/lightweight-jquery-translator/blob/master/LICENSE) "MIT LICENSE")
+Lightweight JQuery Translator is licensed unter the [MIT License](https://github.com/codingsamuel/lightweight-jquery-translator/blob/master/LICENSE)
