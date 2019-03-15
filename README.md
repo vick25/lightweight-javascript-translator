@@ -4,7 +4,7 @@ A lightweight jquery translator with customizable settings and callbacks.
 
 ## Version
 
-The latest version is 1.0.0
+The latest version is 1.0.1
 
 ## Implementation
 
