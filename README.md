@@ -4,7 +4,7 @@ A lightweight jquery translator with customizable settings and callbacks.
 
 ## Version
 
-The latest version is 1.0.2
+The latest version is 1.0.3
 
 ## Implementation
 
@@ -144,6 +144,10 @@ The usage is very easy. You only need 2 Parameters to fill in order to work prop
 * Internet Explorer
 
 ## Changelog
+
+### 1.0.3
+
+* Fix translation file loading
 
 ### 1.0.2
 

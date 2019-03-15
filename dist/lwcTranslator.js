@@ -1,7 +1,7 @@
 /**
  * @author codingsamuel
  * @license MIT
- * @version 1.0.2
+ * @version 1.0.3
  * @copyright codingsamuel 2019
  */
 if (!Object.entries) {
@@ -46,7 +46,7 @@ class LwcTranslator {
     let attr = el.attr(attributes.attrTranslation || 'data-translation-attr');
     let replacement = language ? language.json : {};
     let objects = translation.split('.');
-    
+
     objects.forEach(obj => {
       if (replacement)
         replacement = replacement[obj];
@@ -72,16 +72,16 @@ class LwcTranslator {
    * @param {Function} callback 
    */
   _onLoad(callback) {
-    if (callback) callback.call(this, this.getLanguages());
-
     let settings = this._getLwcSettings();
     let attributes = settings.attributes || {};
     let language = this.getLanguage(settings.defaultLanguage || 'en-UK');
     let elements = $(`[${attributes.textTranslation || 'data-translation'}]`);
-    
+
     elements.each((i, element) => {
       this._translate($(element), settings, attributes, language);
     });
+    
+    if (callback) callback.call(this, this.getLanguages());
   }
 
   /**
@@ -123,42 +123,32 @@ class LwcTranslator {
   load(async, listeners) {
     $.ajax({
       url: this.languageSettingsFile,
-      async: async,
-      /**
-       * @param {Array|Object} json
-       */
-      success: (json) => { 
-        this.setLanguageSettings(json);
-        let languages = [];
-        
-        for (let i = 0; i < json.length; i++){
-          $.ajax({
-            url: this.languageFolderPath + json[i].filename + ".json",
-            async: async,
-            /**
-             * @param {Array|Object} language
-             */
-            success: (language) => {
-              languages.push({filename: json[i].filename, json: language});
+      async: async
+    }).done((json) => {
+      this.setLanguageSettings(json);
+      let languages = [];
+      
+      for (let i = 0; i < json.length; i++){
+        $.ajax({
+          url: this.languageFolderPath + json[i].filename + ".json",
+          async: async
+        }).done((language) => {
+          languages.push({filename: json[i].filename, json: language});
 
-              if (i == json.length - 1) {
-                this.addLanguages(languages);
-                this._onLoad(listeners.onLanguagesLoaded);
-              }
-              
-              if (listeners.onLanguageLoaded) listeners.onLanguageLoaded.call(this, language);
-            },
-            error: (e) => {
-              throw new Error("Failed to load language from " + this.languageFolderPath + json[i].filename + ".json");
-            }
-          });
-        }
-        
-        if (listeners.onSettingsLoad) listeners.onSettingsLoad.call(this, json);
-      },
-      error: (e) => {
-        throw new Error("Failed to load " + this.languageSettingsFile);
+          if (i == json.length - 1) {
+            this.addLanguages(languages);
+            this._onLoad(listeners.onLanguagesLoaded);
+          }
+          
+          if (listeners.onLanguageLoaded) listeners.onLanguageLoaded.call(this, language);
+        }).fail((e) => {
+          throw new Error("Failed to load language from " + this.languageFolderPath + json[i].filename + ".json");
+        });
       }
+      
+      if (listeners.onSettingsLoad) listeners.onSettingsLoad.call(this, json);
+    }).fail(() => {
+      throw new Error("Failed to load " + this.languageSettingsFile);
     });
   }
 
