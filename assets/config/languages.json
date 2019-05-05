@@ -1,12 +1,57 @@
-[
-  {
-    "name": "English",
-    "filename": "en-UK",
-    "icon": "gb.svg"
-  },
-  {
-    "name": "Deutsch",
-    "filename": "de-DE",
-    "icon": "de.svg"
-  }
-]
+{
+  "regex": "\\{\\{(.*?)\\}\\}",
+  "pagesDir": "views",
+  "partialsDir": "partials",
+  "pages": [
+    {
+      "dir": "example",
+      "partials": ["navbar", "footer"],
+      "translations": [
+        "en-GB"
+      ]
+    },
+    {
+      "dir": "example/login",
+      "partials": ["navbar", "footer"],
+      "translations": [
+        "en-GB"
+      ]
+    }
+  ],
+  "partials": [
+    {
+      "dir": "navbar",
+      "translations": [
+        "en-GB"
+      ]
+    },
+    {
+      "dir": "footer",
+      "translations": [
+        "en-GB"
+      ]
+    }
+  ],
+  "supported": [
+    {
+      "name": "English",
+      "langShort": "en",
+      "langCode": "en-GB"
+    },
+    {
+      "name": "Svenska",
+      "langShort": "sv",
+      "langCode": "sv-SE"
+    },
+    {
+      "name": "Portugues",
+      "langShort": "pt",
+      "langCode": "pt-PT"
+    },
+    {
+      "name": "Deutsch",
+      "langShort": "de",
+      "langCode": "de-DE"
+    }
+  ]
+}

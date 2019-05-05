@@ -81,34 +81,35 @@
 </code>
 </pre>
 
-  <script src="dist/lwcTranslator.min.js"></script>
+  <script src="dist/v2/lwcTranslator.js"></script>
   <script>
 
-    if (!window.localStorage['defaultLanguage'])
-      window.localStorage['defaultLanguage'] = 'en-UK';
+    // if (!window.localStorage['defaultLanguage'])
+    //   window.localStorage['defaultLanguage'] = 'en-UK';
 
-    $('body').prepend('<p>Your Default Language is ' + window.localStorage['defaultLanguage'] + "</p>");  
+    // $('body').prepend('<p>Your Default Language is ' + window.localStorage['defaultLanguage'] + "</p>");  
     
-    $('html').lwcTranslator({
-      languageSettingsFile: 'https://cdn.moutinho.org/lightweight-jquery-translator/assets/config/languages.json',
-      languageFolderPath: 'https://cdn.moutinho.org/lightweight-jquery-translator/assets/config/languages/',
-      defaultLanguage: window.localStorage['defaultLanguage'],
-      onLanguageSettingsLoaded: function(settings) {
-        for (let i = 0; i < settings.length; i++) {
-          if (settings[i].filename == window.localStorage['defaultLanguage'])
-            $('select').append('<option value="'+settings[i].filename+'" selected>'+settings[i].name+'</option>');
-          else
-            $('select').append('<option value="'+settings[i].filename+'">'+settings[i].name+'</option>');          
-        }
+    // $('html').lwcTranslator({
+    //   languageSettingsFile: 'https://cdn.moutinho.org/lightweight-jquery-translator/assets/config/languages.json',
+    //   languageFolderPath: 'https://cdn.moutinho.org/lightweight-jquery-translator/assets/config/languages/',
+    //   defaultLanguage: window.localStorage['defaultLanguage'],
+    //   onLanguageSettingsLoaded: function(settings) {
+    //     for (let i = 0; i < settings.length; i++) {
+    //       if (settings[i].filename == window.localStorage['defaultLanguage'])
+    //         $('select').append('<option value="'+settings[i].filename+'" selected>'+settings[i].name+'</option>');
+    //       else
+    //         $('select').append('<option value="'+settings[i].filename+'">'+settings[i].name+'</option>');          
+    //     }
 
-        $('select').change(function(){
-          window.localStorage['defaultLanguage'] = $(this).val();
-          window.location.reload();
-        });
-      }
-    });
+    //     $('select').change(function(){
+    //       window.localStorage['defaultLanguage'] = $(this).val();
+    //       window.location.reload();
+    //     });
+    //   }
+    // });
 
   </script>
+  <script src="assets/js/main.js"></script>
   <script src="assets/js/prism.min.js"></script>
 </body>
 </html>
