@@ -1,3 +1,9 @@
 {
-  "version": "0.1.0"
+  "version": "0.1.0",
+  "content": {
+    "header": {
+      "title": "Lorem ipsum",
+      "slogan": "My wonderful slogan"
+    }
+  }
 }

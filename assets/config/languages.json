@@ -1,7 +1,7 @@
 {
   "regex": "\\{\\{(.*?)\\}\\}",
   "pagesDir": "views",
-  "partialsDir": "partials",
+  "partialsDir": "parts",
   "pages": [
     {
       "dir": "example",
