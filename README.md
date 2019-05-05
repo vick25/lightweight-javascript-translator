@@ -4,7 +4,7 @@ A lightweight jquery translator with customizable settings and callbacks.
 
 ## Version
 
-The latest version is 1.0.3
+The latest version is 2.0.1
 
 ## Implementation
 
@@ -20,18 +20,12 @@ Make sure to implement JQuery first before the Lightweight JQuery Translator lib
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-
-  <!-- Scripts -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <!-- OR -->
-  <!-- <script src="./assets/js/jquery-3.3.1.min.js"></script> -->
-
   <title></title>
 </head>
 <body>
 
   <!-- Make sure to implement this file on the very bottom of the body -->
-  <script src="https://cdn.moutinho.org/lightweight-jquery-translator/@latest/lwcTranslator.min.js"></script>
+  <script src="https://cdn.moutinho.org/lightweight-javascript-translator/@latest/lwcTranslator.min.js"></script>
   <!-- OR -->
   <!-- <script src="./assets/js/lwcTranslator.min.js"></script> -->
 </body>
@@ -40,7 +34,7 @@ Make sure to implement JQuery first before the Lightweight JQuery Translator lib
 
 ## Demo
 
-[See how this library works](https://cdn.moutinho.org/lightweight-jquery-translator/example.html)
+[See how this library works](https://cdn.moutinho.org/lightweight-javascript-translator/example.html)
 
 ## Usage
 
@@ -72,32 +66,28 @@ The usage is very easy. You only need 2 Parameters to fill in order to work prop
   <script src="https://cdn.moutinho.org/lightweight-jquery-translator/@latest/lwcTranslator.min.js"></script>
   <script>
 
-    // Normal use
-    $('html').lwcTranslator({
-      languageSettingsFile: 'https://path/to/languages.json',
-      languageFolderPath: 'https://path/to/languages/folder/'
+    // Easy use
+    new LwcTranslator({
+      translationSettings: 'https://path/to/languages.json',
+      translationFolder: 'https://path/to/languages/folder/'
     });
 
     // Customized use
     /* Default Values: */
-    $('html').lwcTranslator({
-      languageSettingsFile: 'https://path/to/languages.json', /* (REQUIRED) settings file path */
-      languageFolderPath: 'https://path/to/languages/folder/', /* (REQUIRED) languages folder path */
-      async: true, /* Load files asynchronous */
-      attributes: {
-        textTranslation: 'data-translation', /*text translation attribute*/
-        attrTranslation: 'data-translation-attr' /*attribute translation attribute*/
+    new LwcTranslator({
+      translationSettings: '/assets/config/translations.json',  // Path to settings file
+      translationFolder: '/assets/config/translations/', // Path to translations folder
+      querySelector: 'html', // Selector to replace text inside
+      initialLanguageCode: 'en-GB', // Initial Language value if no value is set
+      currentLanguageKey: 'currLang',
+      onError: function(err) {
+        // Log your error
       },
-      defaultLanguage: 'en-UK', /*load default language (useable with saved language in local storage or else)*/
-      paragraphSupport: true, /*Break \n line breaks inside <p></p> tags*/
-      onLanguageSettingsLoaded: function(settings) { /*after load of languages settings file*/
-        console.log('settings', settings);
+      onTranslationSettingsLoaded: function(settings) {
+        // Language Settings were loaded
       },
-      onLanguageLoaded: function(language) { /* after load of every language*/
-        console.log('language', language);
-      },
-      onLanguagesLoaded: function(languages) { /* after load of all languages*/
-        console.log('languages', languages);
+      onTranslationLoaded: function (content) {
+        // A translation file for a page/partial was loaded
       }
     });
 
@@ -108,30 +98,89 @@ The usage is very easy. You only need 2 Parameters to fill in order to work prop
 
 ### JSON
 
-#### languages.json
+#### translations.json
 
-> LwcTranslator will only use the filename. You can can edit the rest as you want to.
+> Possible structure of a translation settings file
 
 ```json
-[
-  {
-    "name": "English",
-    "filename": "en-UK",
-    "icon": "gb.svg"
-  }
-]
+{
+  "regex": "\\{\\{(.*?)\\}\\}", //Matches text inside {{textToTranslate}}
+  "pagesDir": "views",  // Directory where the translation of the pages is stored
+  "partialsDir": "parts", // Directory where the partials translations are stored
+  "pages": [ // pages translations
+    {
+      "dir": "example", // Directory with the translations inside the views folder in this example
+      "partials": ["navbar", "footer"], // Load extra partials
+      "translations": [ // Set the available translations
+        "en-GB", "pt-PT", "de-DE", "sv-SE"
+      ]
+    }
+  ],
+  "partials": [ // partials translations
+    {
+      "dir": "navbar",
+      "translations": [
+        "en-GB", "pt-PT", "de-DE", "sv-SE"
+      ]
+    },
+    {
+      "dir": "footer",
+      "translations": [
+        "en-GB", "pt-PT", "de-DE", "sv-SE"
+      ]
+    }
+  ],
+  "supported": [  //Supported languages
+    {
+      "name": "English",  //Name (not required)
+      "langShort": "en",  // Language Short (required)
+      "langCode": "en-GB" // Language Code (required)
+    },
+    {
+      "name": "Svenska",
+      "langShort": "sv",
+      "langCode": "sv-SE"
+    },
+    {
+      "name": "Portugues",
+      "langShort": "pt",
+      "langCode": "pt-PT"
+    },
+    {
+      "name": "Deutsch",
+      "langShort": "de",
+      "langCode": "de-DE"
+    }
+  ]
+}
 ```
 
-#### en-UK.json
+#### Folder structure
+
+* /config/translations/
+  * translations/
+    * views/
+      * exampleView/
+        * en-GB.json
+        * de-DE.json
+    * partials/
+      * examplePartial
+        * en-GB.json
+        * de-DE.json
+  * translations.json
+
+#### en-GB.json
 
 > This file is used to get the translations for the site. You may use nested JSON Objects for specific translations
 
 ```json
 {
-  "lang": "en",
-  "title": "My wonderful title",
-  "header": {
-    "title": "Hello World!"
+  "version": "1.0.0", // Just for debug to specify the version of the language translation
+  "content": { // Your translation starts in the content object
+    "title": "Hello World!",
+    "header": {
+      "slogan": "Lorem Ipsum."
+    }
   }
 }
 ```
@@ -144,6 +193,15 @@ The usage is very easy. You only need 2 Parameters to fill in order to work prop
 * Internet Explorer
 
 ## Changelog
+
+### 2.0.1
+
+* Overall renewed library
+* New features:
+  * You can add a custom regex to the site def: {{text}}
+  * Better Error prevention (custom Callback available)
+  * Easier language load
+  * More detailed and structured Language settings
 
 ### 1.0.3
 

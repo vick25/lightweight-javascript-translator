@@ -1,9 +1,9 @@
 {
   "version": "0.1.0",
   "content": {
+    "title": "Example",
     "header": {
-      "title": "Lorem ipsum",
-      "slogan": "My wonderful slogan"
+      "currentLanguage": "Your current language is English"
     }
   }
 }

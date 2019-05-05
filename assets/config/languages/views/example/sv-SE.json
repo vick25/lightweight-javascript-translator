@@ -1,0 +1,9 @@
+{
+  "version": "0.1.0",
+  "content": {
+    "title": "Exempel",
+    "header": {
+      "currentLanguage": "O teu idioma actual é portugues."
+    }
+  }
+}

@@ -1,3 +1,9 @@
+/**
+ * @author codingsamuel
+ * @license MIT
+ * @version 2.0.1
+ * @copyright codingsamuel 2019
+ */
 class LwcTranslator {
 
   /**
@@ -216,27 +222,30 @@ class LwcTranslator {
   translate(content) {
     try {
       let lang = this.getCurrentLanguage();
-      let html = document.querySelector('html');
-      html.setAttribute("lang", lang.langShort);
+      
+      if (!content) this.settings.onError.call(this, this._handleError('translation content is not defined. Please check your translation file for [' + lang.langCode + ".json]"));
+      else {
+        let html = document.querySelector(this.settings.querySelector);
+        document.querySelector('html').setAttribute("lang", lang.langShort);
 
-      let regex = new RegExp(this.getRegex(), "g");
+        let regex = new RegExp(this.getRegex(), "g");
+        let items = html.innerHTML.match(regex);
 
-      let items = html.innerHTML.match(/\{\{(.*?)\}\}/g) || [];
+        items.forEach((e, i) => {
+          regex = new RegExp(this.getRegex(), "g");
+          let text = regex.exec(e);
+          if (text) {
+            let breaks = text[1].split('.');
+            let replacement = content;
 
-      items.forEach((e, i) => {
-        let text = e.substring(2, e.length - 2);
-        let breaks = text.split('.');
+            breaks.forEach((b) => {
+              replacement = replacement[b];
+            });
 
-        console.log(breaks);
-
-        for (let i = 0; i < breaks.length; i++) {
-          console.log(content)
-        }
-
-
-        html.innerHTML = this._replaceAll(html.innerHTML, e, text);
-      });
-
+            html.innerHTML = this._replaceAll(html.innerHTML, e, replacement); 
+          }
+        });
+      }
 
     } catch(ex) {
       this.settings.onError.call(this, ex);
