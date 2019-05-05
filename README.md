@@ -1,6 +1,6 @@
-# Lightweight JQuery Translator
+# Lightweight Javascript Translator
 
-A lightweight jquery translator with customizable settings and callbacks.
+A lightweight Javascript translator with customizable settings and callbacks.
 
 ## Version
 
@@ -8,7 +8,7 @@ The latest version is 2.0.1
 
 ## Implementation
 
-Make sure to implement JQuery first before the Lightweight JQuery Translator library.
+Make sure to implement the library on  the very bottom of the `</body>`
 
 ### Example
 
@@ -202,6 +202,7 @@ The usage is very easy. You only need 2 Parameters to fill in order to work prop
   * Better Error prevention (custom Callback available)
   * Easier language load
   * More detailed and structured Language settings
+  * Removed JQuery support. No extra library needed to use this translator!
 
 ### 1.0.3
 
