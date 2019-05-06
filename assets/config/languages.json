@@ -1,13 +1,12 @@
 {
   "regex": "\\{\\{(.*?)\\}\\}",
   "pagesDir": "views",
-  "partialsDir": "partials",
+  "partialsDir": "parts",
   "pages": [
     {
       "dir": "example",
-      "partials": ["navbar", "footer"],
       "translations": [
-        "en-GB"
+        "en-GB", "pt-PT", "de-DE", "sv-SE"
       ]
     },
     {

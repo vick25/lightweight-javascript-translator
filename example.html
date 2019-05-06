@@ -1,115 +1,107 @@
 <!DOCTYPE html>
-<html data-translation="lang" data-translation-attr="lang">
+<html>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <link rel="stylesheet" href="assets/css/prism.min.css">
-  <title data-translation="title"></title>
-
-  <style>
-    
-  html, body {
-    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif
-  }
-
-  </style>
+  <title>{{title}}</title>
 </head>
 <body>
   
   <h1>This Page content is translated with the LwcTranslator.</h1>
 
   <header>
-    <h1 data-translation="header.title"></h1>
+    <h1>{{header.currentLanguage}}</h1>
   </header>
 
-  <select name="" id=""></select>
+  <select name="" id="select" onchange="reloadPage(event)"></select>
 
   <h2>Example usage of LwcTranslator</h2>
-<pre style="max-height: 400px;">
+<pre style="max-height: 600px;">
 <code class="language-html">
-&lt;!DOCTYPE html&gt;
-&lt;html data-translation=&quot;lang&quot; data-translation-attr=&quot;lang&quot;&gt;
+  &lt;!DOCTYPE html&gt;
+&lt;html&gt;
 &lt;head&gt;
   &lt;meta charset=&quot;UTF-8&quot;&gt;
   &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
   &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;ie=edge&quot;&gt;
-  &lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js&quot;&gt;&lt;/script&gt;
-  &lt;title data-translation=&quot;title&quot;&gt;&lt;/title&gt;
+  &lt;link rel=&quot;stylesheet&quot; href=&quot;assets/css/prism.min.css&quot;&gt;
+  &lt;title&gt;{{title}}&lt;/title&gt;
 &lt;/head&gt;
 &lt;body&gt;
   
   &lt;h1&gt;This Page content is translated with the LwcTranslator.&lt;/h1&gt;
 
   &lt;header&gt;
-    &lt;h1 data-translation=&quot;header.title&quot;&gt;&lt;/h1&gt;
+    &lt;h1&gt;{{header.currentLanguage}}&lt;/h1&gt;
   &lt;/header&gt;
 
-  &lt;select name=&quot;&quot; id=&quot;&quot;&gt;&lt;/select&gt;
+  &lt;select name=&quot;&quot; id=&quot;select&quot; onchange=&quot;reloadPage(event)&quot;&gt;&lt;/select&gt;
 
-  &lt;h2&gt;Example usage of LwcTranslator&lt;/h2&gt;
-
-  &lt;script src=&quot;dist/lwcTranslator.min.js&quot;&gt;&lt;/script&gt;
+  &lt;script src=&quot;dist/v2/lwcTranslator.js&quot;&gt;&lt;/script&gt;
   &lt;script&gt;
-
-    if (!window.localStorage['defaultLanguage'])
-      window.localStorage['defaultLanguage'] = 'en-UK';
-    
-    $('html').lwcTranslator({
-      languageSettingsFile: 'https://cdn.moutinho.org/lightweight-jquery-translator/assets/config/languages.json',
-      languageFolderPath: 'https://cdn.moutinho.org/lightweight-jquery-translator/assets/config/languages/',
-      defaultLanguage: window.localStorage['defaultLanguage'],
-      onLanguageSettingsLoaded: function(settings) {
-        for (let i = 0; i &lt; settings.length; i++) {
-          if (settings[i].filename == window.localStorage['defaultLanguage'])
-            $('select').append('&lt;option value=&quot;'+settings[i].filename+'&quot; selected&gt;'+settings[i].name+'&lt;/option&gt;');
-          else
-            $('select').append('&lt;option value=&quot;'+settings[i].filename+'&quot;&gt;'+settings[i].name+'&lt;/option&gt;');          
-        }
-
-        $('select').change(function(){
-          window.localStorage['defaultLanguage'] = $(this).val();
-          window.location.reload();
-        });
+  
+  var translator = new LwcTranslator({
+    querySelector: &quot;html&quot;,
+    translationSettings: &quot;/assets/config/languages.json&quot;,
+    translationFolder: &quot;/assets/config/languages/&quot;,
+    initialLanguageCode: 'en-GB',
+    onError: (err) =&gt; {
+      console.log(err);
+    },
+    onTranslationSettingsLoaded: function(settings) {
+      let select = document.getElementById('select');
+      for (let i = 0; i &lt; settings.supported.length; i++) {
+        select.innerHTML += &quot;&lt;option value=\&quot;&quot;+settings.supported[i].langCode+&quot;\&quot;&gt;&quot;+settings.supported[i].name+&quot;&lt;/option&gt;&quot;;
       }
-    });
+    }
+  });
 
+  window.onload = function() {
+    select.value = null;
+    select.value = translator.getCurrentLanguage().langCode;
+  }
+
+  function reloadPage(e) {
+    translator.setCurrentLanguage(e.currentTarget.value);
+    window.location.reload();
+  }
   &lt;/script&gt;
 &lt;/body&gt;
 &lt;/html&gt;
 </code>
 </pre>
 
-  <script src="dist/v2/lwcTranslator.js"></script>
+  <script src="https://cdn.moutinho.org/lightweight-javascript-translator/@latest/lwcTranslator.min.js"></script>
   <script>
+  
+  var translator = new LwcTranslator({
+    querySelector: "html",
+    translationSettings: "https://cdn.moutinho.org/lightweight-javascript-translator/assets/config/languages.json",
+    translationFolder: "https://cdn.moutinho.org/lightweight-javascript-translator/assets/config/languages/",
+    initialLanguageCode: 'en-GB',
+    onError: (err) => {
+      console.log(err);
+    },
+    onTranslationSettingsLoaded: function(settings) {
+      let select = document.getElementById('select');
+      for (let i = 0; i < settings.supported.length; i++) {
+        select.innerHTML += "<option value=\""+settings.supported[i].langCode+"\">"+settings.supported[i].name+"</option>";
+      }
+    }
+  });
 
-    // if (!window.localStorage['defaultLanguage'])
-    //   window.localStorage['defaultLanguage'] = 'en-UK';
+  window.onload = function() {
+    select.value = null;
+    select.value = translator.getCurrentLanguage().langCode;
+  }
 
-    // $('body').prepend('<p>Your Default Language is ' + window.localStorage['defaultLanguage'] + "</p>");  
-    
-    // $('html').lwcTranslator({
-    //   languageSettingsFile: 'https://cdn.moutinho.org/lightweight-jquery-translator/assets/config/languages.json',
-    //   languageFolderPath: 'https://cdn.moutinho.org/lightweight-jquery-translator/assets/config/languages/',
-    //   defaultLanguage: window.localStorage['defaultLanguage'],
-    //   onLanguageSettingsLoaded: function(settings) {
-    //     for (let i = 0; i < settings.length; i++) {
-    //       if (settings[i].filename == window.localStorage['defaultLanguage'])
-    //         $('select').append('<option value="'+settings[i].filename+'" selected>'+settings[i].name+'</option>');
-    //       else
-    //         $('select').append('<option value="'+settings[i].filename+'">'+settings[i].name+'</option>');          
-    //     }
-
-    //     $('select').change(function(){
-    //       window.localStorage['defaultLanguage'] = $(this).val();
-    //       window.location.reload();
-    //     });
-    //   }
-    // });
-
+  function reloadPage(e) {
+    translator.setCurrentLanguage(e.currentTarget.value);
+    window.location.reload();
+  }
   </script>
-  <script src="assets/js/main.js"></script>
   <script src="assets/js/prism.min.js"></script>
 </body>
 </html>

@@ -1,0 +1,9 @@
+{
+  "version": "0.1.0",
+  "content": {
+    "title": "Beispiel",
+    "header": {
+      "currentLanguage": "Deine aktuelle Sprache ist Deutsch."
+    }
+  }
+}
