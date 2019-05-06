@@ -4,7 +4,7 @@ A lightweight Javascript translator with customizable settings and callbacks.
 
 ## Version
 
-The latest version is 2.0.1
+The latest version is 2.1.0
 
 ## Implementation
 
@@ -61,7 +61,6 @@ The usage is very easy. You only need 2 Parameters to fill in order to work prop
   <!-- Make sure to implement this file on the very bottom of the body -->
   <script src="https://cdn.moutinho.org/lightweight-javascript-translator/@latest/lwcTranslator.min.js"></script>
   <script>
-
     // Easy use
     new LwcTranslator({
       translationSettings: 'https://path/to/languages.json',
@@ -75,7 +74,15 @@ The usage is very easy. You only need 2 Parameters to fill in order to work prop
       translationFolder: '/assets/config/translations/', // Path to translations folder
       querySelector: 'html', // Selector to replace text inside
       initialLanguageCode: 'en-GB', // Initial Language value if no value is set
-      currentLanguageKey: 'currLang', // key that will be stored in local storage
+      store: {
+        useCustom: false,
+        customCallback: {
+          get: function () { return { langShort: "YOUR_LANG", langCode: "YOUR_LANGCODE" }; },
+          set: function (lang) { /* Save your language here */ }
+        },
+        key: "currLang" // key that will be stored in local storage
+        mode: "localStorage"  // localStorage / cookie
+      },
       onError: function(err) {
         // Log your error
       },
@@ -86,7 +93,6 @@ The usage is very easy. You only need 2 Parameters to fill in order to work prop
         // A translation file for a page/partial was loaded
       }
     });
-
   </script>
 </body>
 </html>
@@ -189,6 +195,12 @@ The usage is very easy. You only need 2 Parameters to fill in order to work prop
 * Internet Explorer
 
 ## Changelog
+
+### 2.1.0
+
+* Added support for store saving
+  * use custom callback with get and set
+  * two modes available localStorage / cookie
 
 ### 2.0.1
 

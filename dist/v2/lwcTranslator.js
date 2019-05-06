@@ -11,23 +11,39 @@ class LwcTranslator {
    * @param {string} settings.querySelector
    * @param {string} settings.translationSettings
    * @param {string} settings.translationFolder
-   * @param {string} settings.currentLanguageKey
    * @param {string} settings.initialLanguageCode
    * @param {Function} settings.onTranslationSettingsLoaded
    * @param {Function} settings.onTranslationLoaded
-   * @param {Function} settings.onError
+   * @param {Object} settings.store
+   * @param {boolean} settings.store.useCustom
+   * @param {String} settings.store.key
+   * @param {String} settings.store.mode
+   * @param {Object} settings.store.customCallback
+   * @param {Function} settings.store.customCallback.get
+   * @param {Function} settings.store.customCallback.set
    */
   constructor(settings) {
     this.settings = {
       querySelector: settings.querySelector || 'html',
       translationSettings: settings.translationSettings || '/assets/config/translations.json',
       translationFolder: settings.translationFolder || '/assets/config/translations/',
-      currentLanguageKey: settings.currentLanguageKey || 'currLang',
       initialLanguageCode: settings.initialLanguageCode || 'en-GB',
       onTranslationSettingsLoaded: settings.onTranslationSettingsLoaded || function () {},
       onTranslationLoaded: settings.onTranslationLoaded || function () {},
-      onError: settings.onError || function () {}
+      onError: settings.onError || function () {},
+      store: { useCustom: Boolean, key: String, mode: String, customCallback: { get: Function, set: Function } }
     }
+
+    if (settings.store)
+      this.settings.store = {
+        useCustom: settings.store.useCustom || false,
+        key: settings.store.key || "currLang",
+        mode: settings.store.mode || "localStorage",
+        customCallback: settings.store.customCallback ? {
+          get: settings.store.customCallback.get || function() {}, set: settings.store.customCallback.set || function() {}
+        } : { get: function() {}, set: function() {} }
+      };
+    else this.settings.store = { useCustom: false, key: "currLang", mode: "localStorage", customCallback: { get: function() {}, set: function() {} } };
     this.init();
   }
 
@@ -136,15 +152,43 @@ class LwcTranslator {
   }
 
   setCurrentLanguage(langCode) {
-    let def = { "name": "English", "langShort": "en", "langCode": "en-GB" };
-    window.localStorage.setItem(this.settings.currentLanguageKey, JSON.stringify(
-      this.getSupportedLanguages() ? (this.getSupportedLanguages().filter(e => e.langCode === langCode)[0] || def) : def
-    ));
+    if (!this.settings.store.useCustom) {
+      let def = { "name": "English", "langShort": "en", "langCode": "en-GB" };
+      let item = JSON.stringify(this.getSupportedLanguages() ? (this.getSupportedLanguages().filter(e => e.langCode === langCode)[0] || def) : def);
+
+      switch(this.settings.store.mode) {
+        case "localStorage":
+          window.localStorage.setItem(this.settings.store.key, item);
+          break;
+        case "cookie":
+          document.cookie = this.settings.store.key + "=" + item + ";path=/";
+          break;
+      }
+      
+    } else {
+      this.settings.store.customCallback.set.call(this, langCode);
+    }
   }
 
   getCurrentLanguage() {
-    let item = window.localStorage.getItem(this.settings.currentLanguageKey);
-    return item ? JSON.parse(item) : undefined;
+    let item;
+    if (!this.settings.store.useCustom) {
+      switch (this.settings.store.mode) {
+        case "localStorage":
+          item = window.localStorage.getItem(this.settings.store.key)
+          break;
+        case "cookie":
+          let cookies = document.cookie.split(";");
+          cookies.forEach((cookie, i) => {
+            let val = cookie.split("=");
+            if (val[0] === this.settings.store.key) item = val[1]
+          });
+          break;
+      }
+      return item ? JSON.parse(item) : { name: undefined, langShort: undefined, langCode: undefined };
+    } else {
+      return this.settings.store.customCallback.get.call(this);
+    }
   }
 
   getCurrentPage() {
