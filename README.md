@@ -64,7 +64,10 @@ The usage is very easy. You only need 2 Parameters to fill in order to work prop
     // Easy use
     new LwcTranslator({
       translationSettings: 'https://path/to/languages.json',
-      translationFolder: 'https://path/to/languages/folder/'
+      translationFolder: 'https://path/to/languages/folder/',
+      onTranslationSettingsLoaded: function(settings) {
+        this.load(myPage);
+      },
     });
 
     // Customized use
@@ -74,6 +77,7 @@ The usage is very easy. You only need 2 Parameters to fill in order to work prop
       translationFolder: '/assets/config/translations/', // Path to translations folder
       querySelector: 'html', // Selector to replace text inside
       initialLanguageCode: 'en-GB', // Initial Language value if no value is set
+      autoTranslate: false, // Beta Automatically translates the currentPage
       store: {
         useCustom: false,
         customCallback: {
@@ -85,9 +89,11 @@ The usage is very easy. You only need 2 Parameters to fill in order to work prop
       },
       onError: function(err) {
         // Log your error
+        console.log(err);
       },
       onTranslationSettingsLoaded: function(settings) {
         // Language Settings were loaded
+        this.load(myPage); // Translates the page
       },
       onTranslationLoaded: function (content) {
         // A translation file for a page/partial was loaded
@@ -195,6 +201,12 @@ The usage is very easy. You only need 2 Parameters to fill in order to work prop
 * Internet Explorer
 
 ## Changelog
+
+### 2.1.1
+
+* Added support for autoTranslation
+  * translate the pages automatically (beta)
+* fix wrong loading
 
 ### 2.1.0
 
