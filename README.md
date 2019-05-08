@@ -4,7 +4,7 @@ A lightweight Javascript translator with customizable settings and callbacks.
 
 ## Version
 
-The latest version is 2.1.0
+The latest version is 2.1.1
 
 ## Implementation
 
@@ -32,9 +32,9 @@ Make sure to implement the library on  the very bottom of the `</body>`
 </html>
 ```
 
-## Demo
+## Live Example
 
-[See how this library works](https://cdn.moutinho.org/lightweight-javascript-translator/example.html)
+[See how this library works](https://samuel.moutinho.org/)
 
 ## Usage
 
