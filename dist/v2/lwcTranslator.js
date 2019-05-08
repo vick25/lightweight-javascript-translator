@@ -15,6 +15,7 @@ class LwcTranslator {
    * @param {boolean} settings.autoTranslate
    * @param {Function} settings.onTranslationSettingsLoaded
    * @param {Function} settings.onTranslationLoaded
+   * @param {Function} settings.onError
    * @param {Object} settings.store
    * @param {boolean} settings.store.useCustom
    * @param {String} settings.store.key
@@ -137,32 +138,35 @@ class LwcTranslator {
     }
   }
 
-  _loadTranslations(json, page) {
-    let pagesDir = json.pagesDir || "pages";
-    let partialsDir = json.partialsDir || "partials";
+  _loadTranslations(json, page, currPage) {
+    try {
+      let pagesDir = json.pagesDir || "pages";
+      let partialsDir = json.partialsDir || "partials";
+      let partials = json.partials || [];
+      let pagePartials = page.partials || [];
+      
+      let checkPartials = function() {
+        let prts = [];
+        pagePartials.forEach((e, i) => {
+          let part = partials.filter(p => p.dir === e)[0];
+          if (part) prts.push(part);
+        });
+        return prts;
+      }
+      
+      let partialsToLoad = checkPartials();
+      
+      if (partialsToLoad.length != pagePartials.length)
+        this.settings.onError.call(this, this._handleError('Not all Partials for the page [' + currPage + '] were found. Please check your settings file!'));
+      else {
+        for (let i = 0; i < partialsToLoad.length; i++)
+          this._loadTranslationFile(partialsDir, partialsToLoad[i]);
+      }
 
-    let partials = json.partials || [];
-    let pagePartials = page.partials || [];
-    
-    let checkPartials = function() {
-      let prts = [];
-      pagePartials.forEach((e, i) => {
-        let part = partials.filter(p => p.dir === e)[0];
-        if (part) prts.push(part);
-      });
-      return prts;
+      this._loadTranslationFile(pagesDir, page);
+    } catch (ex) {
+      this.settings.onError.call(this, this._handleError(ex));
     }
-    
-    let partialsToLoad = checkPartials();
-    
-    if (partialsToLoad.length != pagePartials.length)
-      this.settings.onError.call(this, this._handleError('Not all Partials for the page [' + currPage + '] were found. Please check your settings file!'));
-    else {
-      for (let i = 0; i < partialsToLoad.length; i++)
-        this._loadTranslationFile(partialsDir, partialsToLoad[i]);
-    }
-
-    this._loadTranslationFile(pagesDir, page);
   }
 
   setRegex(regex) {
@@ -279,7 +283,7 @@ class LwcTranslator {
     try {
       let translationSettings = this.getTranslationsSettings();
       let page = translationSettings.pages.filter(e => e.dir === currPage)[0];
-      if (page) this._loadTranslations(translationSettings, page);
+      if (page) this._loadTranslations(translationSettings, page, currPage);
       else this.settings.onError.call(this, this._handleError('Page ['+currPage+'] not found in settings!'));      
     } catch (ex) {
       this.settings.onError.call(this, this._handleError(ex));
