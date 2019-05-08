@@ -1,7 +1,7 @@
 /**
  * @author codingsamuel
  * @license MIT
- * @version 2.0.1
+ * @version 2.1.1
  * @copyright codingsamuel 2019
  */
 class LwcTranslator {
@@ -12,8 +12,10 @@ class LwcTranslator {
    * @param {string} settings.translationSettings
    * @param {string} settings.translationFolder
    * @param {string} settings.initialLanguageCode
+   * @param {boolean} settings.autoTranslate
    * @param {Function} settings.onTranslationSettingsLoaded
    * @param {Function} settings.onTranslationLoaded
+   * @param {Function} settings.onError
    * @param {Object} settings.store
    * @param {boolean} settings.store.useCustom
    * @param {String} settings.store.key
@@ -28,6 +30,7 @@ class LwcTranslator {
       translationSettings: settings.translationSettings || '/assets/config/translations.json',
       translationFolder: settings.translationFolder || '/assets/config/translations/',
       initialLanguageCode: settings.initialLanguageCode || 'en-GB',
+      autoTranslate: settings.autoTranslate || false,
       onTranslationSettingsLoaded: settings.onTranslationSettingsLoaded || function () {},
       onTranslationLoaded: settings.onTranslationLoaded || function () {},
       onError: settings.onError || function () {},
@@ -49,8 +52,8 @@ class LwcTranslator {
 
   _contains(word) {
     try {
-      let elements = document.querySelectorAll("*");
-      return [].filter.call(elements, (element) => {
+      var elements = document.querySelectorAll('*');
+      return Array.prototype.filter.call(elements, function(element){
         return RegExp(word).test(element.textContent);
       });
     } catch(ex) {
@@ -73,7 +76,7 @@ class LwcTranslator {
       req.send();
       return req;
     } catch (ex) {
-      this.settings.onError.call(this, ex);
+      this.settings.onError.call(this, this._handleError(ex));
     }
   }
 
@@ -115,8 +118,8 @@ class LwcTranslator {
       let lang = this.getCurrentLanguage();
       let availableTranslations = file.translations || [];
       let availableTranslation = availableTranslations.filter(e => e === lang.langCode)[0];
-  
-      if (!availableTranslation) this.settings.onError.call(this, this._handleError('No translation found for page [' + page.dir + "]!"));
+      
+      if (!availableTranslation) this.settings.onError.call(this, this._handleError('No translation found for page [' + file.dir + "]!"));
       else {
         let req = this._prepareRequest(this.settings.translationFolder + dir + "/" + file.dir + "/" + lang.langCode + ".json");
         req.onreadystatechange = (e) => {
@@ -131,6 +134,37 @@ class LwcTranslator {
         }
       }
     } catch(ex) {
+      this.settings.onError.call(this, this._handleError(ex));
+    }
+  }
+
+  _loadTranslations(json, page, currPage) {
+    try {
+      let pagesDir = json.pagesDir || "pages";
+      let partialsDir = json.partialsDir || "partials";
+      let partials = json.partials || [];
+      let pagePartials = page.partials || [];
+      
+      let checkPartials = function() {
+        let prts = [];
+        pagePartials.forEach((e, i) => {
+          let part = partials.filter(p => p.dir === e)[0];
+          if (part) prts.push(part);
+        });
+        return prts;
+      }
+      
+      let partialsToLoad = checkPartials();
+      
+      if (partialsToLoad.length != pagePartials.length)
+        this.settings.onError.call(this, this._handleError('Not all Partials for the page [' + currPage + '] were found. Please check your settings file!'));
+      else {
+        for (let i = 0; i < partialsToLoad.length; i++)
+          this._loadTranslationFile(partialsDir, partialsToLoad[i]);
+      }
+
+      this._loadTranslationFile(pagesDir, page);
+    } catch (ex) {
       this.settings.onError.call(this, this._handleError(ex));
     }
   }
@@ -153,7 +187,7 @@ class LwcTranslator {
 
   setCurrentLanguage(langCode) {
     if (!this.settings.store.useCustom) {
-      let def = { "name": "English", "langShort": "en", "langCode": "en-GB" };
+      let def = { name: "English", langShort: "en", langCode: "en-GB" };
       let item = JSON.stringify(this.getSupportedLanguages() ? (this.getSupportedLanguages().filter(e => e.langCode === langCode)[0] || def) : def);
 
       switch(this.settings.store.mode) {
@@ -185,28 +219,37 @@ class LwcTranslator {
           });
           break;
       }
-      return item ? JSON.parse(item) : { name: undefined, langShort: undefined, langCode: undefined };
+      return item ? JSON.parse(item) : null;
     } else {
       return this.settings.store.customCallback.get.call(this);
     }
   }
 
   getCurrentPage() {
-    let path = location.pathname;
-    path = path.substring(1, path.lastIndexOf('.'));
+    var path = window.location.pathname;
+    path = path.replace(/\.[^/.]+$/, "");
+    path = path.substring(1, path.length);
     return path;
+  }
+
+  setTranslationSettings(settings) {
+    this._translationSettings = settings;
+  }
+
+  getTranslationsSettings() {
+    return this._translationSettings;
   }
 
   init() {
     try {
       let settings = this.settings;
-      this.load(settings.translationSettings);
+      this.loadSettings(settings.translationSettings);
     } catch(ex) {
-      this.settings.onError.call(this, ex);
+      this.settings.onError.call(this, this._handleError(ex));
     }
   }
 
-  load(path) {
+  loadSettings(path) {
     try {
       let reqSettings = this._prepareRequest(path);
       reqSettings.onreadystatechange = (e) => {
@@ -214,43 +257,16 @@ class LwcTranslator {
           let json = JSON.parse(reqSettings.responseText);
           this.setSupportedLanguages(json.supported);
           this.setRegex(json.regex || "\\{\\{(.*?)\\}\\}");
+          this.setTranslationSettings(json);
           
           if (!this.getCurrentLanguage())
             this.setCurrentLanguage(this.settings.initialLanguageCode);
 
           let currPage = this.getCurrentPage();
-          let pagesDir = json.pagesDir || "pages";
-          let partialsDir = json.partialsDir || "partials";
-          let pages = json.pages || [];
-          let page = pages.filter(e => e.dir === currPage)[0];
           
-          if (page) {
-            let partials = json.partials || [];
-            let pagePartials = page.partials || [];
-            
-            let checkPartials = function() {
-              let prts = [];
-              pagePartials.forEach((e, i) => {
-                let part = partials.filter(p => p.dir === e)[0];
-                if (part) prts.push(part);
-              });
-              return prts;
-            }
-            
-            let partialsToLoad = checkPartials();
-            
-            if (partialsToLoad.length != pagePartials.length)
-              this.settings.onError.call(this, this._handleError('Not all Partials for the page [' + currPage + '] were found. Please check your settings file!'));
-            else {
-              for (let i = 0; i < partialsToLoad.length; i++) {
-                this._loadTranslationFile(partialsDir, partialsToLoad[i]);
-              }
-            }
-
-            this._loadTranslationFile(pagesDir, page);
-
-          } else {
-            this.settings.onError.call(this, this._handleError('Page ['+currPage+'] not found in settings!'));
+          if (this.settings.autoTranslate){
+            console.warn("Auto translate is still in beta, because it still can't recognize the correct path. Please use load the translation manually in the onTranslationSettingsLoad callback.");
+            this.load(currPage);
           }
 
           this.settings.onTranslationSettingsLoaded.call(this, json);
@@ -259,7 +275,18 @@ class LwcTranslator {
         }
       }
     } catch(ex) {
-      this.settings.onError.call(this, ex);
+      this.settings.onError.call(this, this._handleError(ex));
+    }
+  }
+
+  load(currPage) {
+    try {
+      let translationSettings = this.getTranslationsSettings();
+      let page = translationSettings.pages.filter(e => e.dir === currPage)[0];
+      if (page) this._loadTranslations(translationSettings, page, currPage);
+      else this.settings.onError.call(this, this._handleError('Page ['+currPage+'] not found in settings!'));      
+    } catch (ex) {
+      this.settings.onError.call(this, this._handleError(ex));
     }
   }
 
@@ -274,25 +301,33 @@ class LwcTranslator {
 
         let regex = new RegExp(this.getRegex(), "g");
         let items = html.innerHTML.match(regex);
-
-        items.forEach((e, i) => {
-          regex = new RegExp(this.getRegex(), "g");
-          let text = regex.exec(e);
-          if (text) {
-            let breaks = text[1].split('.');
-            let replacement = content;
-
-            breaks.forEach((b) => {
-              replacement = replacement[b];
-            });
-
-            html.innerHTML = this._replaceAll(html.innerHTML, e, replacement); 
-          }
-        });
+        
+        if (items) {
+          items.forEach((e, i) => {
+            let arr = this._contains(e);
+            let el = arr[arr.length - 1];
+            regex = new RegExp(this.getRegex(), "g");
+            let text = regex.exec(e);
+            
+            if (el && text) {
+              let breaks = text[1].split('.');
+              let replacement = content;
+  
+              breaks.forEach(b => {
+                if (replacement[b]) replacement = replacement[b];
+              });
+              
+              if (typeof replacement === "string")
+                el.innerHTML = this._replaceAll(el.innerHTML, e, replacement);
+            } else {
+              this.settings.onError.call(this, this._handleError("Could not translate [" + e + "]"));
+            }
+          });
+        }
       }
 
     } catch(ex) {
-      this.settings.onError.call(this, ex);
+      this.settings.onError.call(this, this._handleError(ex));
     }
   }
 
